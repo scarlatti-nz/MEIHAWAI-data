@@ -1,0 +1,27 @@
+output_dir : "output"
+
+lucas_LUCNA_values:
+  - "75 - Grassland - High producing"
+  - "76 - Grassland - Low producing"
+  - "77 - Cropland - Orchards and vineyards (perennial)"
+  - "78 - Cropland - Annual"
+
+lucas_SUBNA_values:
+  - "503 - Grazed - non-dairy"
+
+lat_start: -47.3
+lat_end: -34.2
+lon_start: 166.4
+lon_end: 178.6
+
+grid_max_samples: 10000000
+grid_size: 0.2 # lat-lon
+buffer: 0.01
+
+minimum_overlap_percentage_for_intersection: 10 # 10%
+minimum_farm_size: 10000 #m2
+minimum_percentage_farmland_for_land_parcel_to_be_considered_farmland: 50 # 50%
+neighbour_distance_threshold: 200 #m (max distance between farms to count as neighours)
+minimum_land_parcel_size: 10000 #m2
+
+Radiata300_dollars_per_m3: 45 # revenue multiplier to get the value of forestry per hectare, see https://forecastercalculator.integral.co.nz/Simulate. Essentially revenue / year / 300 index.

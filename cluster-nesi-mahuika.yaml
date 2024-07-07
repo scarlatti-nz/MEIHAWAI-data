@@ -1,0 +1,10 @@
+__default__:
+   account: nesi03886
+   time: 04:00:00
+   ntasks: 1
+   cpus-per-task: 1
+   mem: 6000m
+   partition: large
+   hint: nomultithread
+   output: logs/%x-%j.out
+   error: logs/%x-%j.err
