@@ -35,7 +35,7 @@ def load_MAL_data():
     )
     if(not loading_success):
         print("MAL data failed to load")
-        save_empty_dataset(output_directory + "/hectares_with_stuff_final.gpkg")
+        save_empty_dataset(output_directory + "/hectares_with_data_final.gpkg")
         sys.exit(0)
     MAL_and_catchment_data = pyogrio.read_dataframe(output_directory+"/MAL_and_catchment_data.gpkg")
     MAL_and_catchment_data.rename(columns={"REC2_Termi":"REC2_TerminalSegment"}, inplace=True)
@@ -91,7 +91,7 @@ def join_to_MAL_data():
     print("Joining to MAL data")
     hectares = pyogrio.read_dataframe(output_directory+"/hectares.gpkg")
     if(len(hectares) == 0):
-        save_empty_dataset(output_directory + "/hectares_with_stuff_final.gpkg")
+        save_empty_dataset(output_directory + "/hectares_with_data_final.gpkg")
         sys.exit(0)
     
     MAL_and_catchment_data = pyogrio.read_dataframe(output_directory+"/MAL_and_catchment_data_processed.gpkg")
@@ -102,7 +102,7 @@ def join_to_MAL_data():
     hectares = gpd.sjoin(hectares, MAL_and_catchment_data, how="left")
     hectares = hectares.set_geometry("geometry")
     hectares = hectares.drop(columns=["centroid", "index_right"])
-    pyogrio.write_dataframe(hectares, output_directory+"/hectares_with_stuff_v1.gpkg")
+    pyogrio.write_dataframe(hectares, output_directory+"/hectares_with_data_v1.gpkg")
 
 def load_dairy_typology():
     print("Loading dairy typology")
@@ -115,14 +115,14 @@ def load_dairy_typology():
     )
     if(not dairy_typology_success):
         print("Dairy typology failed to load")
-        save_empty_dataset(output_directory + "/hectares_with_stuff_final.gpkg")
+        save_empty_dataset(output_directory + "/hectares_with_data_final.gpkg")
         sys.exit(0)
 
 def join_to_dairy_typology():
     print("Joining to dairy typology")
-    hectares = pyogrio.read_dataframe(output_directory+"/hectares_with_stuff_v1.gpkg")
+    hectares = pyogrio.read_dataframe(output_directory+"/hectares_with_data_v1.gpkg")
     if(len(hectares) == 0):
-        save_empty_dataset(output_directory + "/hectares_with_stuff_final.gpkg")
+        save_empty_dataset(output_directory + "/hectares_with_data_final.gpkg")
         sys.exit(0)
 
     hectares["centroid"] = hectares.centroid
@@ -134,7 +134,7 @@ def join_to_dairy_typology():
     hectares = hectares[hectares["index_right"].notna()]
     hectares = hectares.set_geometry("geometry")
     hectares = hectares.drop(columns=["centroid", "index_right"])
-    pyogrio.write_dataframe(hectares, output_directory+"/hectares_with_stuff_v2.gpkg")
+    pyogrio.write_dataframe(hectares, output_directory+"/hectares_with_data_v2.gpkg")
 
 def load_height_data():
     print("Loading height data")
@@ -158,9 +158,9 @@ def join_to_height_data():
         Here we use the height maps to get the gradient in each hectare using a convolution kernel.
     """
     print("Joining to height data")
-    hectares = pyogrio.read_dataframe(output_directory+"/hectares_with_stuff_v2.gpkg")
+    hectares = pyogrio.read_dataframe(output_directory+"/hectares_with_data_v2.gpkg")
     if(len(hectares) == 0):
-        save_empty_dataset(output_directory + "/hectares_with_stuff_final.gpkg")
+        save_empty_dataset(output_directory + "/hectares_with_data_final.gpkg")
         sys.exit(0)
 
     files = [output_directory + "/height_maps/" + file for file in os.listdir(output_directory + "/height_maps")]
@@ -239,7 +239,7 @@ def join_to_height_data():
     )
     for key in angle_stat_functions.keys():
         hectares[str(key)] = [stat[key] for stat in angle_stats]
-    pyogrio.write_dataframe(hectares, output_directory+"/hectares_with_stuff_v3.gpkg")
+    pyogrio.write_dataframe(hectares, output_directory+"/hectares_with_data_v3.gpkg")
 
 def load_lri():
     print("Loading lri")
@@ -252,14 +252,14 @@ def load_lri():
     )
     if(not lri_success):
         print("Lri failed to load")
-        save_empty_dataset(output_directory + "/hectares_with_stuff_final.gpkg")
+        save_empty_dataset(output_directory + "/hectares_with_data_final.gpkg")
         sys.exit(0)
 
 def join_to_lri():
     print("Joining to lri")
-    hectares = pyogrio.read_dataframe(output_directory + "/hectares_with_stuff_v3.gpkg")
+    hectares = pyogrio.read_dataframe(output_directory + "/hectares_with_data_v3.gpkg")
     if(len(hectares) == 0):
-        save_empty_dataset(output_directory + "/hectares_with_stuff_final.gpkg")
+        save_empty_dataset(output_directory + "/hectares_with_data_final.gpkg")
         sys.exit(0)
 
     lri = pyogrio.read_dataframe(output_directory+"/lri_selection.gpkg")
@@ -270,11 +270,11 @@ def join_to_lri():
     hectares = gpd.sjoin(hectares, lri, how="left")
     hectares = hectares.set_geometry("geometry")
     hectares = hectares.drop(columns=["centroid", "index_right"])
-    pyogrio.write_dataframe(hectares, output_directory+"/hectares_with_stuff_v4.gpkg")
+    pyogrio.write_dataframe(hectares, output_directory+"/hectares_with_data_v4.gpkg")
 
 def join_to_regions():
     print("Joining to regions")
-    hectares = pyogrio.read_dataframe(output_directory+"/hectares_with_stuff_v4.gpkg")
+    hectares = pyogrio.read_dataframe(output_directory+"/hectares_with_data_v4.gpkg")
     regional_gdf = pyogrio.read_dataframe("raw_data/regional_councils/regional-council-2023-clipped-generalised.shp")
     regional_gdf = regional_gdf.to_crs(hectares.crs)
     regional_gdf = regional_gdf[["REGC2023_1", "geometry"]]
@@ -283,7 +283,7 @@ def join_to_regions():
     hectares = gpd.sjoin(hectares, regional_gdf, how="left")
     hectares = hectares.set_geometry("geometry")
     hectares.drop(columns=["centroid", "index_right"], inplace=True)
-    pyogrio.write_dataframe(hectares, output_directory+"/hectares_with_stuff_v5.gpkg")
+    pyogrio.write_dataframe(hectares, output_directory+"/hectares_with_data_v5.gpkg")
 
 def load_whitiwhiti_ora_economic_indicators():
     print("Loading whitiwhiti ora economic indicators")
@@ -301,7 +301,7 @@ def load_whitiwhiti_ora_economic_indicators():
 
 def join_to_whitiwhiti_ora_economic_indicators():
     print("Joining to whitiwhiti ora economic indicators")
-    hectares = pyogrio.read_dataframe(output_directory+"/hectares_with_stuff_v5.gpkg")
+    hectares = pyogrio.read_dataframe(output_directory+"/hectares_with_data_v5.gpkg")
     hectares["temp_id"] = hectares.index
     for file in os.listdir(output_directory+"/whitiwhiti_ora_economic_indicators"):
         if(file.endswith(".tif")):
@@ -321,7 +321,7 @@ def join_to_whitiwhiti_ora_economic_indicators():
                 else:
                     stats = stats.rename(columns={"value":"economic_indicator_"+file[:-4]+"_value"})
                 hectares = hectares.merge(stats, left_on="temp_id", right_index=True, how="left")
-    pyogrio.write_dataframe(hectares, output_directory+"/hectares_with_stuff_v6.gpkg")
+    pyogrio.write_dataframe(hectares, output_directory+"/hectares_with_data_v6.gpkg")
 
 def load_forestry_data():
     print("Loading forestry data")
@@ -336,7 +336,7 @@ def load_forestry_data():
 
 def join_to_forestry_data():
     print("Joining to forestry data")
-    hectares = pyogrio.read_dataframe(output_directory+"/hectares_with_stuff_v6.gpkg")
+    hectares = pyogrio.read_dataframe(output_directory+"/hectares_with_data_v6.gpkg")
     with rio.open(output_directory+"/Radiata_300Index.tif") as src:
         Radiata300_data = src.read(1)
         Radiata300_data[Radiata300_data == src.nodata] = np.nan
@@ -353,7 +353,7 @@ def join_to_forestry_data():
     )
     hectares["economic_indicator_avg_Radiata300_m3_per_ha"] = [stat["avg_Radiata300_m3_per_ha"] for stat in raster_stats]
     hectares["economic_indicator_Radiata300_revenue_per_ha"] = hectares["economic_indicator_avg_Radiata300_m3_per_ha"] * config["Radiata300_dollars_per_m3"]
-    pyogrio.write_dataframe(hectares, output_directory+"/hectares_with_stuff_v7.gpkg")
+    pyogrio.write_dataframe(hectares, output_directory+"/hectares_with_data_v7.gpkg")
 
 def load_pasture_data():
     print("Loading pasture data")
@@ -373,7 +373,7 @@ def join_to_pasture_data():
         Here we join to pasture data. 
     """
     print("Joining to pasture data")
-    hectares = pyogrio.read_dataframe(output_directory+"/hectares_with_stuff_v7.gpkg")
+    hectares = pyogrio.read_dataframe(output_directory+"/hectares_with_data_v7.gpkg")
     for file in os.listdir(output_directory+"/pasture"):
         if(file.endswith(".tif")):
             with rio.open(output_directory+"/pasture/"+file) as src:
@@ -390,7 +390,7 @@ def join_to_pasture_data():
                 add_stats={"avg_pasture_yield": raster_helper_nan_mean}
             )
             hectares[file[:-4]] = [stat["avg_pasture_yield"] for stat in raster_stats]
-    pyogrio.write_dataframe(hectares, output_directory+"/hectares_with_stuff_v8.gpkg")
+    pyogrio.write_dataframe(hectares, output_directory+"/hectares_with_data_v8.gpkg")
 
 def join_to_dairy_and_BLNZ_profitability():
     """
@@ -398,7 +398,7 @@ def join_to_dairy_and_BLNZ_profitability():
         Pasture quality is measured relative to all other pasture used for the same purpose (dairy or not dairy).
     """
     print("Joining to Dairy and BLNZ profitability")
-    hectares = pyogrio.read_dataframe(output_directory+"/hectares_with_stuff_v8.gpkg")
+    hectares = pyogrio.read_dataframe(output_directory+"/hectares_with_data_v8.gpkg")
 
     # S&B
     BLNZ_data = pd.read_excel("raw_data/profitability/benchmarks.xlsx", sheet_name="BLNZ profit")
@@ -454,12 +454,12 @@ def join_to_dairy_and_BLNZ_profitability():
     hectares["DairyNZ region"] = hectares["REGC2023_1"].map(regional_gdf_regions_to_DairyNZ_regions)
     hectares["DairyNZ profit per ha"] = hectares["DairyNZ region"].map(Dairy_profit_per_ha_all_classes_by_region)
     hectares["DairyNZ revenue per ha"] = hectares["DairyNZ region"].map(Dairy_revenue_per_ha_all_classes_by_region)
-    pyogrio.write_dataframe(hectares, output_directory+"/hectares_with_stuff_v9.gpkg")
+    pyogrio.write_dataframe(hectares, output_directory+"/hectares_with_data_v9.gpkg")
 
 def join_to_lucas_data():
     print("Joining to lucas data")
     lucas = pyogrio.read_dataframe(output_directory + "/lucas_selection.gpkg")
-    hectares = pyogrio.read_dataframe(output_directory+"/hectares_with_stuff_v9.gpkg")
+    hectares = pyogrio.read_dataframe(output_directory+"/hectares_with_data_v9.gpkg")
     lucas.columns = ["lucas_"+column if column != "geometry" else column for column in lucas.columns]
     hectares["centroid"] = hectares.centroid
     hectares = hectares.set_geometry("centroid")
@@ -467,9 +467,9 @@ def join_to_lucas_data():
     hectares = hectares.set_geometry("geometry")
     hectares = hectares.drop(columns=["centroid", "index_right"])
     if(len(hectares) == 0):
-        save_empty_dataset(output_directory + "/hectares_with_stuff_final.gpkg")
+        save_empty_dataset(output_directory + "/hectares_with_data_final.gpkg")
         sys.exit(0)
-    pyogrio.write_dataframe(hectares, output_directory+"/hectares_with_stuff_v10.gpkg")
+    pyogrio.write_dataframe(hectares, output_directory+"/hectares_with_data_v10.gpkg")
 
 
 def load_soil_classification():
@@ -482,7 +482,7 @@ def load_soil_classification():
     )
     if(not soil_classification_success):
         print("Soil classification failed to load")
-        save_empty_dataset(output_directory + "/hectares_with_stuff_final.gpkg")
+        save_empty_dataset(output_directory + "/hectares_with_data_final.gpkg")
         sys.exit(0)
 
 
@@ -497,7 +497,7 @@ def load_land_cover_data():
     )
     if(not land_cover_success):
         print("Land cover failed to load")
-        save_empty_dataset(output_directory + "/hectares_with_stuff_final.gpkg")
+        save_empty_dataset(output_directory + "/hectares_with_data_final.gpkg")
         sys.exit(0)
 
 def run_sediment_calculations():
@@ -591,7 +591,7 @@ def run_sediment_calculations():
     alpha = 10.039
 
     # load the data. We need to consider ALL hectares in a grid to recover our e dataset.
-    hectares = pyogrio.read_dataframe(output_directory+"/hectares_with_stuff_v10.gpkg")
+    hectares = pyogrio.read_dataframe(output_directory+"/hectares_with_data_v10.gpkg")
     hectares["centroid"] = hectares.centroid
     hectares = hectares.set_geometry("centroid")
     all_hectares_in_grid = pyogrio.read_dataframe(output_directory+"/hectares_all.gpkg")
@@ -701,7 +701,7 @@ def run_sediment_calculations():
     hectares["sediment_load_Urban_alt"] = sediment_formula_without_land_cover * erosion_terrain_function_group_to_coefficients_alt["Urban"]
     hectares = hectares.set_geometry("geometry")
     hectares = hectares.drop(columns=["centroid"])
-    pyogrio.write_dataframe(hectares, output_directory+"/hectares_with_stuff_final.gpkg")
+    pyogrio.write_dataframe(hectares, output_directory+"/hectares_with_data_final.gpkg")
     all_hectares_in_grid = all_hectares_in_grid.set_geometry("geometry")
     all_hectares_in_grid = all_hectares_in_grid.drop(columns=["centroid"])
     pyogrio.write_dataframe(all_hectares_in_grid, output_directory+"/all_hectares_in_grid.gpkg")

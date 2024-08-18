@@ -51,7 +51,7 @@ The code files are:
 
 - `split_farms_into_hectares.py`: This script splits farm boundaries into hectare-sized parcels.
 
-- `join_hectares_to_stuff.py`: This script merges hectare-level data with other relevant datasets.
+- `join_hectares_to_data.py`: This script merges hectare-level data with other relevant datasets.
 
 - `utils.py`: This script contains utility functions used by the main scripts.
 
@@ -114,9 +114,9 @@ This script splits farm boundaries into hectare-sized parcels. It does the follo
 
 3. Save the full grid and the grid where it intersects with the farm boundaries to two seperate files.
 
-### join_hectares_to_stuff.py
+### join_hectares_to_data.py
 
-Example usage: `python join_hectares_to_stuff.py -37.9_175.5`
+Example usage: `python join_hectares_to_data.py -37.9_175.5`
 
 This script merges hectare-level data with other relevant datasets. It does the following:
 

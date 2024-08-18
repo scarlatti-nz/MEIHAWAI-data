@@ -17,7 +17,7 @@ lat_lon_strings = np.random.choice(lat_lon_strings, min(len(lat_lon_strings), co
 rule all:
     input:
         expand(
-            output_directory+"/grid_{lat_lon}/hectares_with_stuff_final.gpkg",
+            output_directory+"/grid_{lat_lon}/hectares_with_data_final.gpkg",
             lat_lon=lat_lon_strings
         )
     shell:
@@ -51,9 +51,9 @@ rule split_farms_into_hectares:
     output: output_directory+"/grid_{lat_lon}/hectares.gpkg"
     shell: "python split_farms_into_hectares.py {wildcards.lat_lon}"
 
-rule join_hectares_to_stuff:
+rule join_hectares_to_data:
     input: 
-        "join_hectares_to_stuff.py",
+        "join_hectares_to_data.py",
         output_directory+"/grid_{lat_lon}/hectares.gpkg"
-    output: output_directory+"/grid_{lat_lon}/hectares_with_stuff_final.gpkg"
-    shell: "python join_hectares_to_stuff.py {wildcards.lat_lon}"
+    output: output_directory+"/grid_{lat_lon}/hectares_with_data_final.gpkg"
+    shell: "python join_hectares_to_data.py {wildcards.lat_lon}"
